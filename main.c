@@ -3,6 +3,8 @@
 
 #define PosicaoDoVetor 9887
 
+/* contatos =  5000 */
+
 typedef struct listaDecontatos {
     char nome[30];
     int telefone;
@@ -12,7 +14,6 @@ typedef struct listaDecontatos {
 void Menu();
 
 int main() {
-
     int choice = 0;  
 
     char nome[30];
@@ -20,6 +21,7 @@ int main() {
     char email[100];
 
     char BuscarNome[30];
+    char RemoverNome[30];
 
     do {
         Menu();
@@ -39,6 +41,17 @@ int main() {
                 scanf(" %[^\n]", BuscarNome);
                 system("cls");
                 break;
+
+            case 3:
+                printf("Insira o nome da pessoa para remover: ");
+                scanf(" %[^\n]", RemoverNome);
+                system("cls");
+                break;
+            case 4:
+                printf("Saindo...");
+                break;
+            default: 
+                printf("Erro!\n");
         }
     } while(choice != 4);
 
