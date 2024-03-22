@@ -1,0 +1,23 @@
+int main() {
+    // Inicializando a tabela hash
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        hashTable[i] = NULL;
+    }
+
+    // Lendo os 5000 primeiros contatos do arquivo e inserindo-os na tabela hash
+    readFromFileAndInsert("C:\\Users\\Cliente\\Desktop\\AV2\\todosOsContatos.txt", 5000);
+
+    // Testando as funcionalidades
+    printf("Telefone de Rebeca da Mata: %s\n", search("Rebeca da Mata"));
+    printf("Telefone de Gustavo Carvalho: %s\n", search("Gustavo Carvalho"));
+
+    // Inserindo novo contato e testando
+    insert("Ana", "555444333");
+    printf("Telefone de Ana (inserido): %s\n", search("Ana"));
+
+    // Removendo um contato e testando
+    removeContact("Rebeca da Mata");
+    printf("Telefone de Rebeca da Mata (removido): %s\n", search("Rebeca da Mata"));
+
+    return 0;
+}
