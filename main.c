@@ -1,20 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define PosicaoDoVetor 9887
+#define TABLE_SIZE 9887
 
-/* contatos =  5000 */
-
-typedef struct listaDecontatos {
-    char nome[30];
-    int telefone;
+typedef struct {
+    char nome[100];
+    char telefone[20];
     char email[100];
-} ListaContatos;
+} Contato;
+
+typedef struct No {
+    Contato contato;
+    struct No *prox;
+} No;
+
+No *TabelaHash[TABLE_SIZE];
 
 void Menu();
 
 int main() {
+
     int choice = 0;  
+
+    char nameFile[30];
+    int phoneFile;
+    char emailFile[100];
 
     char nome[30];
     int telefone;
@@ -34,6 +45,7 @@ int main() {
                 scanf("%d", &telefone);
                 printf("Email: ");
                 scanf(" %[^\n]", email);
+                system("cls");
                 break;
 
             case 2:
