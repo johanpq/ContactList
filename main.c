@@ -89,7 +89,9 @@ void InserirContatos(char* nome, char *telefone, char *email) {
 
     unsigned int index = HashDobra(nome);
 
-    // Fazer teste de colisão.
+    while (TabelaHash[index] != NULL) {
+        index = (index + 1) % TABLE_SIZE;
+    }
 
     No* NovoNo = (No*)malloc(sizeof(No));
     NovoNo->contato = *novoContato;
