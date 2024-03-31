@@ -19,6 +19,8 @@ No *TabelaHash[TABLE_SIZE];
 
 void Menu();
 
+void InserirContatos(char* nome, char *telefone, char *email);
+
 int main() {
 
     int choice = 0;  
@@ -45,7 +47,7 @@ int main() {
                 scanf("%d", &telefone);
                 printf("Email: ");
                 scanf(" %[^\n]", email);
-                system("cls");
+                InserirContatos(nome, telefone, email);
                 break;
 
             case 2:
@@ -68,6 +70,33 @@ int main() {
     } while(choice != 4);
 
     return 0 ;
+}
+
+int HashDobra(char* key) {
+    unsigned int hash = 0;
+    int i;
+    for (i = 0; key[i] != '\0'; i++) {
+        hash = hash * 17 + key[i];
+    }
+    return hash % TABLE_SIZE;
+}
+
+void InserirContatos(char* nome, char *telefone, char *email) {
+    Contato* novoContato = (Contato*)malloc(sizeof(Contato));
+    strcpy(novoContato->nome, nome);
+    strcpy(novoContato->telefone, telefone);
+    strcpy(novoContato->email, email);
+
+    unsigned int index = HashDobra(nome);
+
+    // Fazer teste de colisão.
+
+    No* NovoNo = (No*)malloc(sizeof(No));
+    NovoNo->contato = *novoContato;
+    NovoNo->prox = NULL;
+
+    TabelaHash[index] = NovoNo;
+    printf("Contato inserido com sucesso!\n");
 }
 
 void Menu() {
