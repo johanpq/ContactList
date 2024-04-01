@@ -25,6 +25,12 @@ void Buscar(char* nome);
 
 int main() {
 
+    FILE *arquivo = fopen("contatos.txt", "r");
+    if(arquivo == NULL) {
+        printf("Erro ao abrir o arquivo!\n");
+        return 1;
+    }
+
     int choice = 0;  
 
     char nameFile[30];
