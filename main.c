@@ -21,6 +21,8 @@ void Menu();
 
 void InserirContatos(char* nome, char *telefone, char *email);
 
+void Buscar(char* nome);
+
 int main() {
 
     int choice = 0;  
@@ -53,7 +55,8 @@ int main() {
             case 2:
                 printf("Buscar por: ");
                 scanf(" %[^\n]", BuscarNome);
-                system("cls");
+                Buscar(nome);
+                // system("cls");
                 break;
 
             case 3:
@@ -99,6 +102,18 @@ void InserirContatos(char* nome, char *telefone, char *email) {
 
     TabelaHash[index] = NovoNo;
     printf("Contato inserido com sucesso!\n");
+}
+
+void Buscar(char* nome) {
+    unsigned int index = HashDobra(nome);
+    while (TabelaHash[index] != NULL) {
+        if (strcmp(TabelaHash[index]->contato.nome, nome) == 0) {
+            printf("Telefone: %s\nEmail: %s\n", TabelaHash[index]->contato.telefone, TabelaHash[index]->contato.email);
+            return;
+        }
+        index = (index + 1) % TABLE_SIZE;
+    }
+    printf("Contato nao encontrado\n");
 }
 
 void Menu() {
