@@ -25,6 +25,8 @@ void Buscar(char* nome);
 
 void LerArquivoEInserir(FILE *arquivo);
 
+void RemoverContato(char* nome);
+
 // main
 
 int main() {
@@ -71,9 +73,10 @@ int main() {
                 break;
 
             case 3:
-                printf("Insira o nome da pessoa para remover: ");
-                // scanf(" %[^\n]", RemoverNome);
-                system("cls");
+               printf("Insira o nome da pessoa para remover: ");
+                scanf(" %[^\n]", nome);
+                RemoverContato(nome);
+                printf("Contato removido com sucesso!\n");
                 break;
             case 4:
                 printf("Saindo...");
@@ -124,6 +127,19 @@ void Buscar(char* nome) {
     while (TabelaHash[index] != NULL) {
         if (strcmp(TabelaHash[index]->contato.nome, nome) == 0) {
             printf("Telefone: %s\nEmail: %s\n", TabelaHash[index]->contato.telefone, TabelaHash[index]->contato.email);
+            return;
+        }
+        index = (index + 1) % TABLE_SIZE;
+    }
+    printf("Contato nao encontrado\n");
+}
+
+void RemoverContato(char* nome) {
+    unsigned int index = HashDobra(nome);
+    while (TabelaHash[index] != NULL) {
+        if (strcmp(TabelaHash[index]->contato.nome, nome) == 0) {
+            free(TabelaHash[index]);
+            TabelaHash[index] = NULL;
             return;
         }
         index = (index + 1) % TABLE_SIZE;

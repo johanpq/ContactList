@@ -12,8 +12,8 @@ O código em questão consiste na utilização da tabela para esse armazenamento
 
 * <strong> void RemoverContato </strong>  é responsável por remover um contato da tabela hash com base no nome fornecido como parâmetro. 
 
-# vantagens e desvantagens de usar a tabela hash
-## vantagens 
+# Vantagens e Desvantagens de usar a tabela hash
+## Vantagens 
 * <strong> Acesso rápido: </strong> Em média, a busca, inserção e remoção em uma tabela hash têm complexidade de tempo O(1), o que significa que essas operações são muito rápidas, independentemente do tamanho da tabela.
 
 * <strong> Flexibilidade de chaves: </strong> As chaves em uma tabela hash podem ser de vários tipos de dados, não se limitando apenas a inteiros. 
