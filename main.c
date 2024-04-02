@@ -27,10 +27,7 @@ void LerArquivoEInserir(FILE *arquivo);
 
 void RemoverContato(char* nome);
 
-// main
-
 int main() {
-
     FILE *arquivo = fopen("contatos.txt", "r");
     if(arquivo == NULL) {
         printf("Erro ao abrir o arquivo!\n");
@@ -41,9 +38,8 @@ int main() {
         TabelaHash[i] = NULL;
     }
 
-    // Lendo e inserindo os contatos do arquivo na tabela hash
+    /* Lendo e inserindo os contatos do arquivo na tabela hash com encadeamento separado */
     LerArquivoEInserir(arquivo);
-    printf("Lista atualizada!\n");
 
     int choice = 0;
     char nome[100];
@@ -90,7 +86,6 @@ int main() {
 }
 
 int HashDobra(char* key) {
-
     unsigned int hash = 0;
     int i;
     for (i = 0; key[i] != '\0'; i++) {
@@ -99,9 +94,7 @@ int HashDobra(char* key) {
     return hash % TABLE_SIZE;
 }
 
-// Inserindo os contatos na tabela.
 void InserirContatos(char* nome, char *telefone, char *email) {
-
     Contato* novoContato = (Contato*)malloc(sizeof(Contato));
     strcpy(novoContato->nome, nome);
     strcpy(novoContato->telefone, telefone);
@@ -109,51 +102,64 @@ void InserirContatos(char* nome, char *telefone, char *email) {
 
     unsigned int index = HashDobra(nome);
 
-    while (TabelaHash[index] != NULL) {
-        index = (index + 1) % TABLE_SIZE;
-    }
+    int totalContatos = 0;
 
     No* NovoNo = (No*)malloc(sizeof(No));
     NovoNo->contato = *novoContato;
     NovoNo->prox = NULL;
-
-    TabelaHash[index] = NovoNo;
-    
+    /* Checa se há colizão */
+    if (TabelaHash[index] == NULL) {
+        TabelaHash[index] = NovoNo;
+    } else {
+        No* atual = TabelaHash[index];
+        while (atual->prox != NULL) {
+            atual = atual->prox;
+        }
+        atual->prox = NovoNo;
+    }
 }
 
-// Fazendo a busca dos contatos na tabela
 void Buscar(char* nome) {
     unsigned int index = HashDobra(nome);
-    while (TabelaHash[index] != NULL) {
-        if (strcmp(TabelaHash[index]->contato.nome, nome) == 0) {
-            printf("Telefone: %s\nEmail: %s\n", TabelaHash[index]->contato.telefone, TabelaHash[index]->contato.email);
+    No* atual = TabelaHash[index];
+    while (atual != NULL) {
+        if (strcmp(atual->contato.nome, nome) == 0) {
+            printf("Telefone: %s\nEmail: %s\n", atual->contato.telefone, atual->contato.email);
             return;
         }
-        index = (index + 1) % TABLE_SIZE;
+        atual = atual->prox;
     }
     printf("Contato nao encontrado\n");
 }
 
 void RemoverContato(char* nome) {
     unsigned int index = HashDobra(nome);
-    while (TabelaHash[index] != NULL) {
-        if (strcmp(TabelaHash[index]->contato.nome, nome) == 0) {
-            free(TabelaHash[index]);
-            TabelaHash[index] = NULL;
+    No* anterior = NULL;
+    No* atual = TabelaHash[index];
+    while (atual != NULL) {
+        if (strcmp(atual->contato.nome, nome) == 0) {
+            // Remover o contato da lista encadeada
+            if (anterior == NULL) {
+                TabelaHash[index] = atual->prox;
+            } else {
+                anterior->prox = atual->prox;
+            }
+            free(atual);
+            printf("Contato removido com sucesso!\n");
             return;
         }
-        index = (index + 1) % TABLE_SIZE;
+        anterior = atual;
+        atual = atual->prox;
     }
     printf("Contato nao encontrado\n");
 }
 
-// Lendo os contatos dos arquivos e inserinso ma tebela.
 void LerArquivoEInserir(FILE *arquivo) {
-
     char line[256];
     char nome[100];
     char telefone[20];
     char email[100];
+
     int contatosLidos = 0;
 
     while (fgets(line, sizeof(line), arquivo) != NULL && contatosLidos < 5000) {
@@ -167,12 +173,10 @@ void LerArquivoEInserir(FILE *arquivo) {
             contatosLidos++;
         }
     }
-
     fclose(arquivo);
 }
 
 void Menu() {
-
     printf("===== Lista de Contatos =====\n");
     printf("      1. Inserir             \n");
     printf("      2. Buscar              \n");
