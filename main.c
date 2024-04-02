@@ -25,6 +25,8 @@ void Buscar(char* nome);
 
 void LerArquivoEInserir(FILE *arquivo);
 
+// main
+
 int main() {
 
     FILE *arquivo = fopen("contatos.txt", "r");
@@ -39,6 +41,7 @@ int main() {
 
     // Lendo e inserindo os contatos do arquivo na tabela hash
     LerArquivoEInserir(arquivo);
+    printf("Lista atualizada!\n");
 
     int choice = 0;
     char nome[100];
@@ -57,11 +60,12 @@ int main() {
                 printf("Email: ");
                 scanf(" %[^\n]", email);
                 InserirContatos(nome, telefone, email);
+                printf("Contato inserido com sucesso!\n");
                 break;
 
             case 2:
                 printf("Buscar por: ");
-                // scanf(" %[^\n]", BuscarNome);
+                scanf(" %[^\n]", nome);
                 Buscar(nome);
                 // system("cls");
                 break;
@@ -83,6 +87,7 @@ int main() {
 }
 
 int HashDobra(char* key) {
+
     unsigned int hash = 0;
     int i;
     for (i = 0; key[i] != '\0'; i++) {
@@ -91,7 +96,9 @@ int HashDobra(char* key) {
     return hash % TABLE_SIZE;
 }
 
+// Inserindo os contatos na tabela.
 void InserirContatos(char* nome, char *telefone, char *email) {
+
     Contato* novoContato = (Contato*)malloc(sizeof(Contato));
     strcpy(novoContato->nome, nome);
     strcpy(novoContato->telefone, telefone);
@@ -108,9 +115,10 @@ void InserirContatos(char* nome, char *telefone, char *email) {
     NovoNo->prox = NULL;
 
     TabelaHash[index] = NovoNo;
-    printf("Contato inserido com sucesso!\n");
+    
 }
 
+// Fazendo a busca dos contatos na tabela
 void Buscar(char* nome) {
     unsigned int index = HashDobra(nome);
     while (TabelaHash[index] != NULL) {
@@ -123,7 +131,9 @@ void Buscar(char* nome) {
     printf("Contato nao encontrado\n");
 }
 
+// Lendo os contatos dos arquivos e inserinso ma tebela.
 void LerArquivoEInserir(FILE *arquivo) {
+
     char line[256];
     char nome[100];
     char telefone[20];
@@ -146,6 +156,7 @@ void LerArquivoEInserir(FILE *arquivo) {
 }
 
 void Menu() {
+
     printf("===== Lista de Contatos =====\n");
     printf("      1. Inserir             \n");
     printf("      2. Buscar              \n");
