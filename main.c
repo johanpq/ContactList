@@ -23,6 +23,8 @@ void InserirContatos(char* nome, char *telefone, char *email);
 
 void Buscar(char* nome);
 
+void LerArquivoEInserir(FILE *arquivo);
+
 int main() {
 
     FILE *arquivo = fopen("contatos.txt", "r");
@@ -31,18 +33,17 @@ int main() {
         return 1;
     }
 
-    int choice = 0;  
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        TabelaHash[i] = NULL;
+    }
 
-    char nameFile[30];
-    int phoneFile;
-    char emailFile[100];
+    // Lendo e inserindo os contatos do arquivo na tabela hash
+    LerArquivoEInserir(arquivo);
 
-    char nome[30];
-    int telefone;
+    int choice = 0;
+    char nome[100];
+    char telefone[20];
     char email[100];
-
-    char BuscarNome[30];
-    char RemoverNome[30];
 
     do {
         Menu();
@@ -52,7 +53,7 @@ int main() {
                 printf("Nome: ");
                 scanf(" %[^\n]", nome);
                 printf("Telefone: ");
-                scanf("%d", &telefone);
+                scanf("%s", telefone);
                 printf("Email: ");
                 scanf(" %[^\n]", email);
                 InserirContatos(nome, telefone, email);
@@ -60,14 +61,14 @@ int main() {
 
             case 2:
                 printf("Buscar por: ");
-                scanf(" %[^\n]", BuscarNome);
+                // scanf(" %[^\n]", BuscarNome);
                 Buscar(nome);
                 // system("cls");
                 break;
 
             case 3:
                 printf("Insira o nome da pessoa para remover: ");
-                scanf(" %[^\n]", RemoverNome);
+                // scanf(" %[^\n]", RemoverNome);
                 system("cls");
                 break;
             case 4:
@@ -120,6 +121,28 @@ void Buscar(char* nome) {
         index = (index + 1) % TABLE_SIZE;
     }
     printf("Contato nao encontrado\n");
+}
+
+void LerArquivoEInserir(FILE *arquivo) {
+    char line[256];
+    char nome[100];
+    char telefone[20];
+    char email[100];
+    int contatosLidos = 0;
+
+    while (fgets(line, sizeof(line), arquivo) != NULL && contatosLidos < 5000) {
+        if (strstr(line, "Nome:") != NULL) {
+            sscanf(line, "Nome: %[^\n]", nome);
+        } else if (strstr(line, "Telefone:") != NULL) {
+            sscanf(line, "Telefone: %[^\n]", telefone);
+        } else if (strstr(line, "Email:") != NULL) {
+            sscanf(line, "Email: %[^\n]", email);
+            InserirContatos(nome, telefone, email);
+            contatosLidos++;
+        }
+    }
+
+    fclose(arquivo);
 }
 
 void Menu() {
